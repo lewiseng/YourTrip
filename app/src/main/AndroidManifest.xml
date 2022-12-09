@@ -14,17 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AITForumDemo"
         tools:targetApi="31">
+
         <activity
             android:name=".main.ScrollingActivity"
-            android:exported="false"
-            android:label="@string/title_activity_scrolling"
-            android:theme="@style/Theme.AITForumDemo.NoActionBar">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".MainActivity"
             android:exported="true"
             android:label="@string/title_activity_scrolling"
             android:theme="@style/Theme.AITForumDemo.NoActionBar">
@@ -33,6 +25,17 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false"
+            android:label="@string/title_activity_scrolling"
+            android:theme="@style/Theme.AITForumDemo">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
