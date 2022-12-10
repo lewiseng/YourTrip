@@ -14,6 +14,15 @@
         android:maxLines="1" />
 
     <EditText
+        android:id="@+id/etAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Location..."
+        android:inputType="textMultiLine"
+        android:maxLines="10"
+        android:scrollHorizontally="false" />
+
+    <EditText
         android:id="@+id/etBody"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

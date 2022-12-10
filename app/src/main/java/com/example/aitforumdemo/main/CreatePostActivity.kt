@@ -1,12 +1,16 @@
 package com.example.aitforumdemo.main
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.location.Address
+import android.location.Geocoder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -16,6 +20,7 @@ import com.example.aitforumdemo.data.Post
 import com.example.aitforumdemo.databinding.ActivityCreatePostBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import java.io.IOException
 
 class CreatePostActivity : AppCompatActivity() {
 
@@ -25,6 +30,9 @@ class CreatePostActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityCreatePostBinding
+    lateinit var context: Context
+    var doubleLat: Double = 0.0
+    var doubleLong: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +41,7 @@ class CreatePostActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnSend.setOnClickListener {
+            getCoordinates(this)
             uploadPost()
         }
 
@@ -93,12 +102,30 @@ class CreatePostActivity : AppCompatActivity() {
         }
     }
 
+    private fun getCoordinates(context: Context) {
+        val geocoder = Geocoder(this)
+        val addressList: List<Address>
+        try {
+            addressList = geocoder.getFromLocationName(binding.etAddress.text.toString(), 1)
+            if (addressList != null) {
+                doubleLat = addressList[0].getLatitude()
+                doubleLong= addressList[0].getLongitude()
+                Log.d("myTagLat", doubleLat.toString())
+                Log.d("myTagLong", doubleLong.toString())
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
     private fun uploadPost() {
         val newPost = Post(
             FirebaseAuth.getInstance().currentUser!!.uid,
             FirebaseAuth.getInstance().currentUser!!.email!!,
             binding.etTitle.text.toString(),
             binding.etBody.text.toString(),
+            doubleLat.toString(),
+            doubleLong.toString(),
             ""
         )
 
