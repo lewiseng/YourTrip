@@ -1,38 +1,43 @@
-package com.example.aitforumdemo.main
+package com.example.aitforumdemo.ui
 
-import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import com.example.aitforumdemo.R
+import androidx.fragment.app.Fragment
 import com.example.aitforumdemo.adapters.PostsAdapter
 import com.example.aitforumdemo.data.Post
-import com.example.aitforumdemo.databinding.ActivityScrollingBinding
+import com.example.aitforumdemo.databinding.FragmentIdeasBinding
+import com.example.aitforumdemo.main.CreatePostActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 
-class ScrollingActivity : AppCompatActivity() {
+class IdeasFragment : Fragment() {
 
-    private lateinit var binding: ActivityScrollingBinding
     private lateinit var adapter: PostsAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private var _binding: FragmentIdeasBinding? = null
 
-        binding = ActivityScrollingBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
 
-        adapter = PostsAdapter(this,
-        FirebaseAuth.getInstance().currentUser!!.uid)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentIdeasBinding.inflate(inflater, container, false)
+        val root: View = binding.root
+
+        adapter = PostsAdapter(requireActivity(),
+            FirebaseAuth.getInstance().currentUser!!.uid)
         binding.recyclerPosts.adapter = adapter
 
-        setSupportActionBar(findViewById(R.id.toolbar))
-        binding.toolbarLayout.title = title
-        binding.fab.setOnClickListener { view ->
-            startActivity(Intent(this, CreatePostActivity::class.java))
-        }
-        
         queryPosts()
+
+        return root
     }
 
     var snapshotListener: ListenerRegistration? = null
@@ -47,7 +52,7 @@ class ScrollingActivity : AppCompatActivity() {
                                  e: FirebaseFirestoreException?) {
                 if (e != null) {
                     Toast.makeText(
-                        this@ScrollingActivity, "Error: ${e.message}",
+                        requireActivity(), "Error: ${e.message}",
                         Toast.LENGTH_LONG
                     ).show()
                     return
@@ -73,8 +78,9 @@ class ScrollingActivity : AppCompatActivity() {
         snapshotListener = queryPosts.addSnapshotListener(eventListener)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
         snapshotListener?.remove()
     }
 }

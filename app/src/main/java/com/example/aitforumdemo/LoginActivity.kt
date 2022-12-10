@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.aitforumdemo.databinding.ActivityLoginBinding
-import com.example.aitforumdemo.main.ScrollingActivity
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
@@ -74,7 +73,7 @@ class LoginActivity : AppCompatActivity() {
                     Toast.LENGTH_LONG
                 ).show()
 
-                startActivity(Intent(this, ScrollingActivity::class.java))
+                startActivity(Intent(this, MainActivity::class.java))
 
             }.addOnFailureListener{
                 Toast.makeText(
