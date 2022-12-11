@@ -106,7 +106,8 @@ class CreatePostActivity : AppCompatActivity() {
         val geocoder = Geocoder(this)
         val addressList: List<Address>
         try {
-            addressList = geocoder.getFromLocationName(binding.etAddress.text.toString(), 1)
+            addressList = geocoder.getFromLocationName(binding.etAddress.text.toString(), 5)
+            Log.d("myTagAddressList", addressList.toString())
             if (addressList != null) {
                 doubleLat = addressList[0].getLatitude()
                 doubleLong= addressList[0].getLongitude()
@@ -148,3 +149,5 @@ class CreatePostActivity : AppCompatActivity() {
     }
 
 }
+
+
