@@ -1,15 +1,12 @@
-package com.example.aitforumdemo.ui.map
+package com.example.aitforumdemo.ui
 
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import com.example.aitforumdemo.MainActivity
 import com.example.aitforumdemo.R
 import com.example.aitforumdemo.data.Post
 import com.example.aitforumdemo.databinding.FragmentMapBinding
@@ -40,23 +37,9 @@ class MapFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val mapViewModel =
-            ViewModelProvider(this).get(MapViewModel::class.java)
-
-//        _binding = FragmentMapBinding.inflate(inflater, container, false)
-//        val root: View = binding.root
-
-//        val textView: TextView = binding.textNotifications
-//        mapViewModel.text.observe(viewLifecycleOwner) {
-//            textView.text = it
-//        }
-
-//        //new
         val view: View = inflater.inflate(R.layout.fragment_map, container, false)
 
-
         queryPosts()
-
 
         return view
     }
