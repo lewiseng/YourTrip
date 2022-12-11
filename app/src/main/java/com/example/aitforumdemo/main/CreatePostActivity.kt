@@ -18,6 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.aitforumdemo.adapters.PostsAdapter
 import com.example.aitforumdemo.data.Post
 import com.example.aitforumdemo.databinding.ActivityCreatePostBinding
 import com.google.android.gms.tasks.OnCompleteListener
@@ -38,6 +39,7 @@ class CreatePostActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityCreatePostBinding
+    private var isEditMode = false
     var doubleLat: Double = 0.0
     var doubleLong: Double = 0.0
 
@@ -46,6 +48,21 @@ class CreatePostActivity : AppCompatActivity() {
 
         binding = ActivityCreatePostBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        if (intent.hasExtra(PostsAdapter.DOC_ID))
+        {
+            isEditMode = true
+        }
+
+        if (intent.hasExtra(PostsAdapter.TITLE)) {
+            binding.etTitle.setText(intent.getStringExtra(PostsAdapter.TITLE))
+        }
+        if (intent.hasExtra(PostsAdapter.LOCATION)) {
+            binding.etAddress.setText(intent.getStringExtra(PostsAdapter.LOCATION))
+        }
+        if (intent.hasExtra(PostsAdapter.BODY)) {
+            binding.etBody.setText(intent.getStringExtra(PostsAdapter.BODY))
+        }
 
         binding.btnSend.setOnClickListener {
             getCoordinates(this)
@@ -159,24 +176,56 @@ class CreatePostActivity : AppCompatActivity() {
             doubleLong.toString(),
             imgUrl
         )
-
-        // "connect" to posts collection (table)
-        val postsCollection =
-            FirebaseFirestore.getInstance().collection(
-                COLLECTION_POSTS
+    private fun uploadPost() {
+        if (isEditMode) {
+            // update firebase values here
+            var doc = FirebaseFirestore.getInstance().collection(CreatePostActivity.COLLECTION_POSTS)
+            doc.document(intent.getStringExtra(PostsAdapter.DOC_ID).toString())
+//            doc.document("RtAiVgBqJDcdD9FznkoQ")
+                .update(
+                "title", binding.etTitle.text.toString(),
+                    "location", binding.etAddress.text.toString(),
+                "body", binding.etBody.text.toString(),
+                "latitude", doubleLat.toString(),
+                "longitude", doubleLong.toString())
+                .addOnSuccessListener {
+                    Toast.makeText(this@CreatePostActivity,
+                        "Post UPDATED", Toast.LENGTH_LONG).show()
+                    finish()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this@CreatePostActivity,
+                        "Error ${it.message}", Toast.LENGTH_LONG).show()
+                }
+        } else {
+            val newPost = Post(
+                FirebaseAuth.getInstance().currentUser!!.uid,
+                FirebaseAuth.getInstance().currentUser!!.email!!,
+                binding.etTitle.text.toString(),
+                binding.etBody.text.toString(),
+                binding.etAddress.text.toString(),
+                doubleLat.toString(),
+                doubleLong.toString(),
+                ""
             )
-        postsCollection.add(newPost)
-            .addOnSuccessListener {
-                Toast.makeText(this@CreatePostActivity,
-                    "Post SAVED", Toast.LENGTH_LONG).show()
 
-                finish()
-            }
-            .addOnFailureListener {
-                Toast.makeText(this@CreatePostActivity,
-                    "Error ${it.message}", Toast.LENGTH_LONG).show()
-            }
-    }
+            // "connect" to posts collection (table)
+            val postsCollection =
+                FirebaseFirestore.getInstance().collection(
+                    COLLECTION_POSTS
+                )
+            postsCollection.add(newPost)
+                .addOnSuccessListener {
+                    Toast.makeText(this@CreatePostActivity,
+                        "Post SAVED", Toast.LENGTH_LONG).show()
+
+                    finish()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this@CreatePostActivity,
+                        "Error ${it.message}", Toast.LENGTH_LONG).show()
+                }
+        }
 
 
     private fun uploadPostWithImage() {
@@ -207,6 +256,9 @@ class CreatePostActivity : AppCompatActivity() {
                         }
                     })
             }
+    }
+
+}
     }
 
 }

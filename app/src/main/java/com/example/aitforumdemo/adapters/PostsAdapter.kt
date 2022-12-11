@@ -1,10 +1,14 @@
 package com.example.aitforumdemo.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
+import com.example.aitforumdemo.MainActivity
 import com.example.aitforumdemo.main.CreatePostActivity
 import com.example.aitforumdemo.data.Post
 import com.example.aitforumdemo.databinding.PostRowBinding
@@ -12,10 +16,20 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder>{
 
-    lateinit var context: Context
-    lateinit var currentUid: String
+    var context: Context
+    var currentUid: String
     var  postsList = mutableListOf<Post>()
     var  postKeys = mutableListOf<String>()
+    var ID: String = ""
+
+    companion object {
+        const val DOC_ID = "DOC_ID"
+        const val AUTHOR = "AUTHOR"
+        const val TITLE = "TITLE"
+        const val BODY = "BODY"
+        const val LOCATION = "LOCATION"
+//        const val ID_SIX = "ID_SIX"
+    }
 
     constructor(context: Context, uid: String) : super() {
         this.context = context
@@ -77,6 +91,26 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder>{
                 binding.btnDelete.visibility = View.VISIBLE
             } else {
                 binding.btnDelete.visibility = View.GONE
+            }
+
+            // edit code goes to createpostactivity with some intent parameters
+            binding.btnEdit.setOnClickListener {
+                ID = FirebaseFirestore.getInstance().collection(
+                    CreatePostActivity.COLLECTION_POSTS
+                ).document(
+                    postKeys[adapterPosition]
+                ).id
+                val intentMain = Intent()
+                intentMain.setClass(
+                    context, CreatePostActivity::class.java
+                )
+                intentMain.putExtra(DOC_ID, ID)
+                intentMain.putExtra(AUTHOR, post.author)
+                intentMain.putExtra(TITLE, post.title)
+                intentMain.putExtra(BODY, post.body)
+                intentMain.putExtra(LOCATION, post.location)
+
+                (context as MainActivity).startActivity(intentMain)
             }
 
             binding.btnDelete.setOnClickListener{
