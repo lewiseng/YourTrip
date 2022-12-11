@@ -58,7 +58,7 @@ class IdeasFragment : Fragment() {
                     return
                 }
 
-                for (docChange in querySnapshot?.getDocumentChanges()!!) {
+                for (docChange in querySnapshot?.documentChanges!!) {
                     when (docChange.type) {
                         DocumentChange.Type.ADDED -> {
                             val post = docChange.document.toObject(Post::class.java)

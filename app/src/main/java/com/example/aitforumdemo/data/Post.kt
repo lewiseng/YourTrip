@@ -5,6 +5,7 @@ data class Post(
     var author: String = "",
     var title: String = "",
     var body: String = "",
+    var location: String = "",
     var latitude: String = "",
     var longitude: String = "",
     var imgUrl: String = ""

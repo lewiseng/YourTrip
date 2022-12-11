@@ -30,7 +30,6 @@ class CreatePostActivity : AppCompatActivity() {
     }
 
     private lateinit var binding: ActivityCreatePostBinding
-    lateinit var context: Context
     var doubleLat: Double = 0.0
     var doubleLong: Double = 0.0
 
@@ -106,7 +105,7 @@ class CreatePostActivity : AppCompatActivity() {
         val geocoder = Geocoder(this)
         val addressList: List<Address>
         try {
-            addressList = geocoder.getFromLocationName(binding.etAddress.text.toString(), 5)
+            addressList = geocoder.getFromLocationName(binding.etAddress.text.toString(), 1)
             Log.d("myTagAddressList", addressList.toString())
             if (addressList != null) {
                 doubleLat = addressList[0].getLatitude()
@@ -115,7 +114,7 @@ class CreatePostActivity : AppCompatActivity() {
                 Log.d("myTagLong", doubleLong.toString())
             }
         } catch (e: IOException) {
-            e.printStackTrace()
+            Log.d("addressError", e.toString())
         }
     }
 
@@ -125,6 +124,7 @@ class CreatePostActivity : AppCompatActivity() {
             FirebaseAuth.getInstance().currentUser!!.email!!,
             binding.etTitle.text.toString(),
             binding.etBody.text.toString(),
+            binding.etAddress.text.toString(),
             doubleLat.toString(),
             doubleLong.toString(),
             ""

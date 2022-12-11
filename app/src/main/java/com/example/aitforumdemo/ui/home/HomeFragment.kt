@@ -3,14 +3,19 @@ package com.example.aitforumdemo.ui.home
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.aitforumdemo.MainActivity
 import com.example.aitforumdemo.databinding.FragmentHomeBinding
 import com.example.aitforumdemo.main.CreatePostActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.AggregateSource
+import com.google.firebase.firestore.FirebaseFirestore
 
 class HomeFragment : Fragment() {
 
@@ -26,8 +31,6 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val dashboardViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -39,17 +42,25 @@ class HomeFragment : Fragment() {
             )
             startActivity(intentMain)
         }
-
-        val textView: TextView = binding.textDashboard
-//        binding.textDashboard.text = "Your number of posts:"  + numOfPosts.toString()
-//        dashboardViewModel.text.observe(viewLifecycleOwner) {
-//            textView.text = it
-//        }
         return root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val numOfPosts = FirebaseFirestore.getInstance().collection(
+            CreatePostActivity.COLLECTION_POSTS
+        ).whereEqualTo("uid", FirebaseAuth.getInstance().currentUser!!.uid).count()
+        numOfPosts.get(AggregateSource.SERVER).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                binding.textDashboard.text = "Your number of posts: ${task.result.count}"
+            } else {
+                Log.d("TAG", "Count failed: ", task.getException())
+            }
+        }
     }
 }
