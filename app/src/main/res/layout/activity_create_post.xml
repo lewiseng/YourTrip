@@ -4,7 +4,15 @@
     android:id="@+id/activity_write_post"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/imgAttach"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="center"
+        android:visibility="gone"/>
 
     <EditText
         android:id="@+id/etTitle"
@@ -31,18 +39,11 @@
         android:maxLines="10"
         android:scrollHorizontally="false" />
 
-    <ImageView
-        android:id="@+id/imgAttach"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:scaleType="fitXY"
-        android:visibility="gone"/>
-
     <Button
         android:id="@+id/btnAttach"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Attach"/>
+        android:text="Attach" />
 
 
     <Button

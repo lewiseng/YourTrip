@@ -18,7 +18,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-//    private var numOfPosts: Int = 0
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -57,7 +56,6 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        Log.d("mytaglogout", "3")
     }
 
     override fun onResume() {
