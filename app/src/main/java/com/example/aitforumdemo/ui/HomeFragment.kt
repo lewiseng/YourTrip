@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.example.aitforumdemo.LoginActivity
+import com.example.aitforumdemo.MainActivity
 import com.example.aitforumdemo.databinding.FragmentHomeBinding
 import com.example.aitforumdemo.main.CreatePostActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -38,12 +40,24 @@ class HomeFragment : Fragment() {
             )
             startActivity(intentMain)
         }
+
+        binding.btnSignOut.setOnClickListener{
+            FirebaseAuth.getInstance().signOut()
+            val intentMain = Intent()
+            intentMain.setClass(
+                requireContext(), LoginActivity::class.java
+            )
+            startActivity(intentMain)
+            (context as MainActivity).finish()
+        }
+
         return root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        Log.d("mytaglogout", "3")
     }
 
     override fun onResume() {

@@ -67,13 +67,14 @@ class LoginActivity : AppCompatActivity() {
                 binding.etEmail.text.toString(),
                 binding.etPassword.text.toString()
             ).addOnSuccessListener {
+
                 Toast.makeText(
                     this,
                     "Login OK",
                     Toast.LENGTH_LONG
                 ).show()
-
                 startActivity(Intent(this, MainActivity::class.java))
+                finish()
 
             }.addOnFailureListener{
                 Toast.makeText(

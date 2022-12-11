@@ -14,7 +14,7 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
-        <ImageView android:src="@mipmap/ic_launcher"
+        <ImageView android:src="@drawable/travel"
             android:layout_width="wrap_content"
             android:layout_height="72dp"
             android:layout_marginBottom="24dp"
@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:text="john@doe.hu"
-                android:hint="email" />
+                android:hint="Email" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
