@@ -10,11 +10,13 @@
 
     <ImageView
         android:id="@+id/imgAttach"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxHeight="500dp"
         android:scaleType="center"
-        android:visibility="gone"/>
-
+        android:adjustViewBounds="true"
+        android:visibility="gone"
+        android:src="@drawable/screen_shot_2022_06_03_at_5_42_33_pm"/>
 
     <EditText
         android:id="@+id/etTitle"

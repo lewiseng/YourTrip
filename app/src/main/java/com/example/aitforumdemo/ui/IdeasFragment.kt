@@ -1,5 +1,7 @@
 package com.example.aitforumdemo.ui
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -69,7 +71,6 @@ class IdeasFragment : Fragment() {
                             adapter.removePostByKey(docChange.document.id)
                         }
                         DocumentChange.Type.MODIFIED -> {
-                            Log.d("LALA", "CALLED")
                             adapter.editPostByKey(docChange.document.id)
                         }
                     }
@@ -79,6 +80,7 @@ class IdeasFragment : Fragment() {
 
         snapshotListener = queryPosts.addSnapshotListener(eventListener)
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

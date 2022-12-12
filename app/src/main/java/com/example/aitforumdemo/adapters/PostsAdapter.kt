@@ -1,5 +1,6 @@
 package com.example.aitforumdemo.adapters
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -86,8 +87,7 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         val index = postKeys.indexOf(key)
         Log.d("LALA INDEX", index.toString())
         if (index != -1) {
-            notifyItemRemoved(index)
-            notifyItemInserted(index)
+            notifyItemChanged(index)
         }
     }
 
@@ -99,9 +99,12 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder>{
 
             if (currentUid == post.uid){
                 binding.btnDelete.visibility = View.VISIBLE
+                binding.btnEdit.visibility = View.VISIBLE
             } else {
                 binding.btnDelete.visibility = View.GONE
+                binding.btnEdit.visibility = View.GONE
             }
+
 
             // edit code goes to createpostactivity with some intent parameters
             binding.btnEdit.setOnClickListener {

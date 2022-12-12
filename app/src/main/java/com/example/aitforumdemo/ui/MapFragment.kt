@@ -104,6 +104,9 @@ class MapFragment : Fragment() {
                                                 }
                                             })
                                     }
+                                    else{
+                                        googleMap.addMarker(MarkerOptions().position(loc).title(markerInfo.location))
+                                    }
 
                                 }
                             }
@@ -113,8 +116,6 @@ class MapFragment : Fragment() {
                             }
                         }
                     }
-
-
                 }
             }
         }
