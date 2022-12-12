@@ -83,10 +83,10 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         }
     }
 
-    fun editPostByKey(key: String){
+    fun editPostByKey(editedPost: Post, key: String){
         val index = postKeys.indexOf(key)
-        Log.d("LALA INDEX", index.toString())
         if (index != -1) {
+            postsList[index] = editedPost
             notifyItemChanged(index)
         }
     }

@@ -71,7 +71,8 @@ class IdeasFragment : Fragment() {
                             adapter.removePostByKey(docChange.document.id)
                         }
                         DocumentChange.Type.MODIFIED -> {
-                            adapter.editPostByKey(docChange.document.id)
+                            val post = docChange.document.toObject(Post::class.java)
+                            adapter.editPostByKey(post, docChange.document.id)
                         }
                     }
                 }
