@@ -12,9 +12,10 @@ import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.yourtrip.R
+import com.example.yourtrip.databinding.ActivityCreatePostBinding
 import com.example.yourtrip.adapter.PostsAdapter
 import com.example.yourtrip.data.Post
-import com.example.yourtrip.databinding.ActivityCreatePostBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -97,12 +98,10 @@ class CreatePostActivity : AppCompatActivity() {
         // Callback is invoked after the user selects a media item or closes the
         // photo picker.
         if (uri != null) {
-            Log.d("PhotoPicker", "Selected URI: $uri")
             uploadBitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
             binding.imgAttach.setImageBitmap(uploadBitmap)
             binding.imgAttach.visibility = View.VISIBLE
         } else {
-            Log.d("PhotoPicker", "No media selected")
         }
     }
 
@@ -110,21 +109,18 @@ class CreatePostActivity : AppCompatActivity() {
     private fun getCoordinates() {
         Toast.makeText(
             this@CreatePostActivity,
-            "Please wait...", Toast.LENGTH_LONG
+            getString(R.string.waitMsg), Toast.LENGTH_LONG
         ).show()
         val geocoder = Geocoder(this)
         val addressList: List<Address>?
         try {
             addressList = geocoder.getFromLocationName(binding.etAddress.text.toString(), 1)
-            Log.d("myTagAddressList", addressList.toString())
             if (addressList != null) {
                 doubleLat = addressList[0].latitude
                 doubleLong= addressList[0].longitude
-                Log.d("myTagLat", doubleLat.toString())
-                Log.d("myTagLong", doubleLong.toString())
             }
         } catch (e: IOException) {
-            Log.d("addressError", e.toString())
+            Log.d(getString(R.string.catchErrorMsg), e.toString())
         }
     }
 
@@ -146,14 +142,14 @@ class CreatePostActivity : AppCompatActivity() {
                 .addOnSuccessListener {
                     Toast.makeText(
                         this@CreatePostActivity,
-                        "Post UPDATED", Toast.LENGTH_LONG
+                        getString(R.string.updateSuccessMsg), Toast.LENGTH_LONG
                     ).show()
                     finish()
                 }
                 .addOnFailureListener {
                     Toast.makeText(
                         this@CreatePostActivity,
-                        "Error ${it.message}", Toast.LENGTH_LONG
+                        getString(R.string.toastErrorMsg, it.message), Toast.LENGTH_LONG
                     ).show()
                 }
         } else {
@@ -177,7 +173,7 @@ class CreatePostActivity : AppCompatActivity() {
                 .addOnSuccessListener {
                     Toast.makeText(
                         this@CreatePostActivity,
-                        "Post SAVED", Toast.LENGTH_LONG
+                        getString(R.string.savedSuccessMsg), Toast.LENGTH_LONG
                     ).show()
 
                     finish()
@@ -185,7 +181,7 @@ class CreatePostActivity : AppCompatActivity() {
                 .addOnFailureListener {
                     Toast.makeText(
                         this@CreatePostActivity,
-                        "Error ${it.message}", Toast.LENGTH_LONG
+                        getString(R.string.toastErrorMsg, it.message), Toast.LENGTH_LONG
                     ).show()
                 }
         }
@@ -220,7 +216,7 @@ class CreatePostActivity : AppCompatActivity() {
     private fun isFormValid(): Boolean {
         return when {
             binding.etTitle.text.isBlank() -> {
-                binding.etTitle.error = "This field can not be empty"
+                binding.etTitle.error = getString(R.string.nonEmptyErrorMsg)
                 false
             }
             else -> true

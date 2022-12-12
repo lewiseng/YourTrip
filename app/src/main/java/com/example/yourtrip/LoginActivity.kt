@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.example.yourtrip.R
 import com.example.yourtrip.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -33,13 +34,13 @@ class LoginActivity : AppCompatActivity() {
             ).addOnSuccessListener {
                 Toast.makeText(
                     this,
-                    "Registration OK",
+                    getString(R.string.registrationToastMsg),
                     Toast.LENGTH_LONG
                 ).show()
             }.addOnFailureListener{
                 Toast.makeText(
                     this,
-                    "Error: ${it.message}",
+                    getString(R.string.toastErrorMsg, it.message),
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -55,7 +56,7 @@ class LoginActivity : AppCompatActivity() {
 
                 Toast.makeText(
                     this,
-                    "Login OK",
+                    getString(R.string.toastLoginSuccessMsg),
                     Toast.LENGTH_LONG
                 ).show()
                 startActivity(Intent(this, MainActivity::class.java))
@@ -64,7 +65,7 @@ class LoginActivity : AppCompatActivity() {
             }.addOnFailureListener{
                 Toast.makeText(
                     this,
-                    "Error: ${it.message}",
+                    getString(R.string.toastErrorMsg, it.message),
                     Toast.LENGTH_LONG
                 ).show()
             }
@@ -75,11 +76,11 @@ class LoginActivity : AppCompatActivity() {
     private fun isFormValid(): Boolean {
         return when {
             binding.etEmail.text.isEmpty() -> {
-                binding.etEmail.error = "This field can not be empty"
+                binding.etEmail.error = getString(R.string.nonEmptyErrorMsg)
                 false
             }
             binding.etPassword.text.isEmpty() -> {
-                binding.etPassword.error = "The password can not be empty"
+                binding.etPassword.error = getString(R.string.nonEmptyErrorMsg)
                 false
             }
             else -> true

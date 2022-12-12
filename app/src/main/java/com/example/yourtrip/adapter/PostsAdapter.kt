@@ -9,11 +9,11 @@ import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.yourtrip.MainActivity
 import com.example.yourtrip.R
+import com.example.yourtrip.databinding.PostRowBinding
+import com.example.yourtrip.MainActivity
 import com.example.yourtrip.CreatePostActivity
 import com.example.yourtrip.data.Post
-import com.example.yourtrip.databinding.PostRowBinding
 import com.google.firebase.firestore.FirebaseFirestore
 
 class PostsAdapter(var context: Context, uid: String) :
@@ -46,14 +46,12 @@ class PostsAdapter(var context: Context, uid: String) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val post = postsList[holder.adapterPosition]
         holder.itemView.startAnimation(AnimationUtils.loadAnimation(holder.itemView.context, R.anim.anim_one))
-//        var post = postsList[0]
         holder.bind(post)
     }
 
     fun addPost(post: Post, key: String) {
         postsList.add(post)
         postKeys.add(key)
-        //notifyDataSetChanged()
         notifyItemInserted(postsList.lastIndex)
     }
 

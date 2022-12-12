@@ -66,7 +66,7 @@ class HomeFragment : Fragment() {
 
         snapshotListener = numOfPosts.addSnapshotListener { value, e ->
             if (e != null) {
-                Log.w("TAG", "Listen failed.", e)
+//                Log.w("TAG", "Listen failed.", e)
                 return@addSnapshotListener
             }
             binding.textDashboard.text = "Your number of posts: ${value!!.count()}"
