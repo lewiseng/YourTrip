@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.aitforumdemo'
+    namespace 'com.example.yourtrip'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.aitforumdemo"
+        applicationId "com.example.yourtrip"
         minSdk 21
         targetSdk 33
         versionCode 1

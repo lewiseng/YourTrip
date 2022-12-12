@@ -1,18 +1,15 @@
-package com.example.aitforumdemo.ui
+package com.example.yourtrip.fragments
 
-import android.app.Activity
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.example.aitforumdemo.adapters.PostsAdapter
-import com.example.aitforumdemo.data.Post
-import com.example.aitforumdemo.databinding.FragmentIdeasBinding
-import com.example.aitforumdemo.main.CreatePostActivity
+import com.example.yourtrip.adapter.PostsAdapter
+import com.example.yourtrip.data.Post
+import com.example.yourtrip.databinding.FragmentIdeasBinding
+import com.example.yourtrip.CreatePostActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 
@@ -43,9 +40,9 @@ class IdeasFragment : Fragment() {
         return root
     }
 
-    var snapshotListener: ListenerRegistration? = null
+    private var snapshotListener: ListenerRegistration? = null
 
-    fun queryPosts(){
+    private fun queryPosts(){
         val queryPosts = FirebaseFirestore.getInstance().collection(
             CreatePostActivity.COLLECTION_POSTS
         )

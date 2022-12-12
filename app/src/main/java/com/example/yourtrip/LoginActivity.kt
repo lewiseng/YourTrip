@@ -1,10 +1,10 @@
-package com.example.aitforumdemo
+package com.example.yourtrip
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.example.aitforumdemo.databinding.ActivityLoginBinding
+import com.example.yourtrip.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginActivity : AppCompatActivity() {
@@ -25,7 +25,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    fun registerUser() {
+    private fun registerUser() {
         if (isFormValid()) {
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(
                 binding.etEmail.text.toString(),
@@ -46,22 +46,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-
-    fun isFormValid(): Boolean {
-        return when {
-            binding.etEmail.text.isEmpty() -> {
-                binding.etEmail.error = "This field can not be empty"
-                false
-            }
-            binding.etPassword.text.isEmpty() -> {
-                binding.etPassword.error = "The password can not be empty"
-                false
-            }
-            else -> true
-        }
-    }
-
-    fun loginUser() {
+    private fun loginUser() {
         if (isFormValid()) {
             FirebaseAuth.getInstance().signInWithEmailAndPassword(
                 binding.etEmail.text.toString(),
@@ -83,6 +68,21 @@ class LoginActivity : AppCompatActivity() {
                     Toast.LENGTH_LONG
                 ).show()
             }
+        }
+    }
+
+
+    private fun isFormValid(): Boolean {
+        return when {
+            binding.etEmail.text.isEmpty() -> {
+                binding.etEmail.error = "This field can not be empty"
+                false
+            }
+            binding.etPassword.text.isEmpty() -> {
+                binding.etPassword.error = "The password can not be empty"
+                false
+            }
+            else -> true
         }
     }
 }

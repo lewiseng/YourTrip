@@ -40,5 +40,13 @@
     <color name="orange_bg_light">#fff3e0</color>
     <color name="grey_bg_light">#fafafa</color>
 
+    <color name="myColor1">#ffd6a5</color>
+    <color name="myColor2">#fdffb6</color>
+    <color name="myColor3">#caffbf</color>
+    <color name="myColor4">#9bf6ff</color>
+    <color name="myColor5">#a0c4ff</color>
+    <color name="myColor6">#bdb2ff</color>
+
+
     <color name="white">#ffffff</color>
 </resources>

@@ -1,13 +1,8 @@
-package com.example.aitforumdemo.main
+package com.example.yourtrip
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.location.Address
 import android.location.Geocoder
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -16,13 +11,10 @@ import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.example.aitforumdemo.adapters.PostsAdapter
-import com.example.aitforumdemo.data.Post
-import com.example.aitforumdemo.databinding.ActivityCreatePostBinding
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.gms.tasks.Task
+import com.bumptech.glide.Glide
+import com.example.yourtrip.adapter.PostsAdapter
+import com.example.yourtrip.data.Post
+import com.example.yourtrip.databinding.ActivityCreatePostBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -35,13 +27,12 @@ class CreatePostActivity : AppCompatActivity() {
 
     companion object {
         const val COLLECTION_POSTS = "posts"
-        const val REQUEST_CAMERA_PERMISSION = 1001
     }
 
     private lateinit var binding: ActivityCreatePostBinding
     private var isEditMode = false
-    var doubleLat: Double = 0.0
-    var doubleLong: Double = 0.0
+    private var doubleLat: Double = 0.0
+    private var doubleLong: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,31 +54,45 @@ class CreatePostActivity : AppCompatActivity() {
         if (intent.hasExtra(PostsAdapter.BODY)) {
             binding.etBody.setText(intent.getStringExtra(PostsAdapter.BODY))
         }
+        if (intent.hasExtra(PostsAdapter.IMG_URL) &&
+                intent.getStringExtra(PostsAdapter.IMG_URL)?.isNotBlank()!!) {
+            Glide
+                .with(binding.root)
+                .load(intent.getStringExtra(PostsAdapter.IMG_URL))
+                .centerCrop()
+                .placeholder(R.drawable.spinner)
+                .into(binding.imgAttach)
+            binding.imgAttach.visibility = View.VISIBLE
+        }
 
         binding.btnSend.setOnClickListener {
-            getCoordinates(this)
-            if (uploadBitmap != null) {
-                try {
-                    uploadPostWithImage()
-                } catch (e: java.lang.Exception) {
-                    e.printStackTrace()
+            if(isFormValid()){
+                getCoordinates()
+                Toast.makeText(
+                    this@CreatePostActivity,
+                    "Please wait...", Toast.LENGTH_LONG
+                ).show()
+                Thread.sleep(1000)
+                if (uploadBitmap != null) {
+                    try {
+                        uploadPostWithImage()
+                    } catch (e: java.lang.Exception) {
+                        e.printStackTrace()
+                    }
+                } else {
+                    uploadPost(intent.getStringExtra(PostsAdapter.IMG_URL)!!)
                 }
-            } else {
-                uploadPost()
             }
         }
 
         binding.btnAttach.setOnClickListener {
-
             photoLauncher.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         }
-//
-//        requestNeededPermission()
     }
 
-    var uploadBitmap: Bitmap? = null
+    private var uploadBitmap: Bitmap? = null
 
-    var photoLauncher = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+    private var photoLauncher = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         // Callback is invoked after the user selects a media item or closes the
         // photo picker.
         if (uri != null) {
@@ -100,63 +105,16 @@ class CreatePostActivity : AppCompatActivity() {
         }
     }
 
-    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            result ->
-        if (result.resultCode == Activity.RESULT_OK){
-            val data: Intent? = result.data
-            uploadBitmap = data!!.extras!!.get("data") as Bitmap
-            binding.imgAttach.setImageBitmap(uploadBitmap)
-            binding.imgAttach.visibility = View.VISIBLE
-        }
-    }
 
-    fun openCamera() {
-        val intentPhoto = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        resultLauncher.launch(intentPhoto)
-    }
-
-    private fun requestNeededPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    android.Manifest.permission.CAMERA)) {
-                Toast.makeText(this,
-                    "I need it for camera", Toast.LENGTH_SHORT).show()
-            }
-
-            ActivityCompat.requestPermissions(this,
-                arrayOf(android.Manifest.permission.CAMERA),
-                REQUEST_CAMERA_PERMISSION
-            )
-
-        } else {
-            // we already have permission
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        when (requestCode) {
-            REQUEST_CAMERA_PERMISSION -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(this, "CAMERA perm granted", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, "CAMERA perm NOT granted", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
-    private fun getCoordinates(context: Context) {
+    private fun getCoordinates() {
         val geocoder = Geocoder(this)
         val addressList: List<Address>?
         try {
             addressList = geocoder.getFromLocationName(binding.etAddress.text.toString(), 1)
             Log.d("myTagAddressList", addressList.toString())
             if (addressList != null) {
-                doubleLat = addressList[0].getLatitude()
-                doubleLong= addressList[0].getLongitude()
+                doubleLat = addressList[0].latitude
+                doubleLong= addressList[0].longitude
                 Log.d("myTagLat", doubleLat.toString())
                 Log.d("myTagLong", doubleLong.toString())
             }
@@ -166,20 +124,19 @@ class CreatePostActivity : AppCompatActivity() {
     }
 
 
-
-    fun uploadPost(imgUrl: String = "") {
+    private fun uploadPost(imgUrl: String = "") {
         if (isEditMode) {
             // update firebase values here
-            var doc =
-                FirebaseFirestore.getInstance().collection(CreatePostActivity.COLLECTION_POSTS)
+            val doc =
+                FirebaseFirestore.getInstance().collection(COLLECTION_POSTS)
             doc.document(intent.getStringExtra(PostsAdapter.DOC_ID).toString())
-//            doc.document("RtAiVgBqJDcdD9FznkoQ")
                 .update(
                     "title", binding.etTitle.text.toString(),
                     "location", binding.etAddress.text.toString(),
                     "body", binding.etBody.text.toString(),
                     "latitude", doubleLat.toString(),
-                    "longitude", doubleLong.toString()
+                    "longitude", doubleLong.toString(),
+                    "imgUrl", imgUrl
                 )
                 .addOnSuccessListener {
                     Toast.makeText(
@@ -229,14 +186,14 @@ class CreatePostActivity : AppCompatActivity() {
         }
     }
 
-        fun uploadPostWithImage() {
+        private fun uploadPostWithImage() {
         // Convert bitmap to JPEG and put it in a byte array
         val baos = ByteArrayOutputStream()
         uploadBitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val imageInBytes = baos.toByteArray()
 
         // prepare the empty file in the cloud
-        val storageRef = FirebaseStorage.getInstance().getReference()
+        val storageRef = FirebaseStorage.getInstance().reference
         val newImage = URLEncoder.encode(UUID.randomUUID().toString(), "UTF-8") + ".jpg"
         val newImagesRef = storageRef.child("images/$newImage")
 
@@ -246,17 +203,23 @@ class CreatePostActivity : AppCompatActivity() {
                 Toast.makeText(this@CreatePostActivity,
                     exception.message, Toast.LENGTH_SHORT).show()
                 exception.printStackTrace()
-            }.addOnSuccessListener { taskSnapshot ->
+            }.addOnSuccessListener {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
 
-                newImagesRef.downloadUrl.addOnCompleteListener(
-                    object: OnCompleteListener<Uri> {
-                        override fun onComplete(task: Task<Uri>) {
-                            // the public URL of the image is: task.result.toString()
-                            uploadPost(task.result.toString())
-                        }
-                    })
+                newImagesRef.downloadUrl.addOnCompleteListener { task -> // the public URL of the image is: task.result.toString()
+                    uploadPost(task.result.toString())
+                }
             }
+    }
+
+    private fun isFormValid(): Boolean {
+        return when {
+            binding.etTitle.text.isBlank() -> {
+                binding.etTitle.error = "This field can not be empty"
+                false
+            }
+            else -> true
+        }
     }
 
 }

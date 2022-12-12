@@ -1,30 +1,28 @@
-package com.example.aitforumdemo.adapters
+package com.example.yourtrip.adapter
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat.startActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.aitforumdemo.MainActivity
-import com.example.aitforumdemo.R
-import com.example.aitforumdemo.main.CreatePostActivity
-import com.example.aitforumdemo.data.Post
-import com.example.aitforumdemo.databinding.PostRowBinding
+import com.bumptech.glide.Glide
+import com.example.yourtrip.MainActivity
+import com.example.yourtrip.R
+import com.example.yourtrip.CreatePostActivity
+import com.example.yourtrip.data.Post
+import com.example.yourtrip.databinding.PostRowBinding
 import com.google.firebase.firestore.FirebaseFirestore
 
-class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder>{
+class PostsAdapter(var context: Context, uid: String) :
+    RecyclerView.Adapter<PostsAdapter.ViewHolder>() {
 
-    var context: Context
-    var currentUid: String
-    var  postsList = mutableListOf<Post>()
+    var currentUid: String = uid
+    private var  postsList = mutableListOf<Post>()
     var  postKeys = mutableListOf<String>()
-    var ID: String = ""
+    var id: String = ""
 
     companion object {
         const val DOC_ID = "DOC_ID"
@@ -32,12 +30,7 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         const val TITLE = "TITLE"
         const val BODY = "BODY"
         const val LOCATION = "LOCATION"
-//        const val ID_SIX = "ID_SIX"
-    }
-
-    constructor(context: Context, uid: String) : super() {
-        this.context = context
-        this.currentUid = uid
+        const val IMG_URL = "IMG_URL"
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -51,7 +44,7 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder>{
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var post = postsList[holder.adapterPosition]
+        val post = postsList[holder.adapterPosition]
         holder.itemView.startAnimation(AnimationUtils.loadAnimation(holder.itemView.context, R.anim.anim_one))
 //        var post = postsList[0]
         holder.bind(post)
@@ -62,18 +55,6 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         postKeys.add(key)
         //notifyDataSetChanged()
         notifyItemInserted(postsList.lastIndex)
-    }
-
-    // when I remove the post object
-    private fun removePost(index: Int) {
-        FirebaseFirestore.getInstance().collection(
-            CreatePostActivity.COLLECTION_POSTS).document(
-            postKeys[index]
-        ).delete()
-
-        postsList.removeAt(index)
-        postKeys.removeAt(index)
-        notifyItemRemoved(index)
     }
 
     // when somebody else removes an object
@@ -94,24 +75,39 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder>{
         }
     }
 
-    inner class ViewHolder(val binding: PostRowBinding) : RecyclerView.ViewHolder(binding.root){
+    inner class ViewHolder(private val binding: PostRowBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(post: Post) {
             binding.tvAuthor.text = post.author
             binding.tvTitle.text = post.title
             binding.tvBody.text = post.body
 
+            if (post.imgUrl.isNotBlank()){
+                Glide
+                    .with(binding.root)
+                    .load(post.imgUrl)
+                    .centerCrop()
+                    .placeholder(R.drawable.spinner)
+                    .into(binding.ivPhoto)
+            }
+
+            val colorsList = listOf(R.color.myColor1, R.color.myColor2, R.color.myColor3,
+                R.color.myColor4, R.color.myColor5, R.color.myColor6)
+
+            binding.cardView.setCardBackgroundColor(ContextCompat.getColor(context, colorsList[adapterPosition%6]))
+
+
             if (currentUid == post.uid){
                 binding.btnDelete.visibility = View.VISIBLE
                 binding.btnEdit.visibility = View.VISIBLE
             } else {
-                binding.btnDelete.visibility = View.GONE
-                binding.btnEdit.visibility = View.GONE
+                binding.btnDelete.visibility = View.INVISIBLE
+                binding.btnEdit.visibility = View.INVISIBLE
             }
 
 
-            // edit code goes to createpostactivity with some intent parameters
+            // edit code goes to createPostActivity with some intent parameters
             binding.btnEdit.setOnClickListener {
-                ID = FirebaseFirestore.getInstance().collection(
+                id = FirebaseFirestore.getInstance().collection(
                     CreatePostActivity.COLLECTION_POSTS
                 ).document(
                     postKeys[adapterPosition]
@@ -120,11 +116,12 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder>{
                 intentMain.setClass(
                     context, CreatePostActivity::class.java
                 )
-                intentMain.putExtra(DOC_ID, ID)
+                intentMain.putExtra(DOC_ID, id)
                 intentMain.putExtra(AUTHOR, post.author)
                 intentMain.putExtra(TITLE, post.title)
                 intentMain.putExtra(BODY, post.body)
                 intentMain.putExtra(LOCATION, post.location)
+                intentMain.putExtra(IMG_URL, post.imgUrl)
 
                 (context as MainActivity).startActivity(intentMain)
             }

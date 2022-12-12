@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_ideas"
-        android:name="com.example.aitforumdemo.ui.IdeasFragment"
-        android:label="Posts"
+        android:name="com.example.yourtrip.fragments.IdeasFragment"
+        android:label="@string/ideas"
         tools:layout="@layout/fragment_ideas" />
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.aitforumdemo.ui.HomeFragment"
+        android:name="com.example.yourtrip.fragments.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_map"
-        android:name="com.example.aitforumdemo.ui.MapFragment"
+        android:name="com.example.yourtrip.fragments.MapFragment"
         android:label="@string/title_map"
         tools:layout="@layout/fragment_map" />
 </navigation>

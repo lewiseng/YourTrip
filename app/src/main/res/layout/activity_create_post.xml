@@ -10,38 +10,62 @@
 
     <ImageView
         android:id="@+id/imgAttach"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxHeight="500dp"
+        android:maxHeight="300dp"
         android:scaleType="center"
+        android:layout_marginBottom="10dp"
         android:adjustViewBounds="true"
-        android:visibility="gone"
-        android:src="@drawable/screen_shot_2022_06_03_at_5_42_33_pm"/>
+        android:visibility="gone"/>
 
-    <EditText
-        android:id="@+id/etTitle"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/etTitle_input_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Title"
-        android:maxLines="1" />
+        android:layout_height="wrap_content">
 
-    <EditText
-        android:id="@+id/etAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Location..."
-        android:inputType="textMultiLine"
-        android:maxLines="10"
-        android:scrollHorizontally="false" />
+        <EditText
+            android:id="@+id/etTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Title"
+            android:inputType="text"
+            android:maxLines="1" />
 
-    <EditText
-        android:id="@+id/etBody"
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/etLocation_input_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Write your post..."
-        android:inputType="textMultiLine"
-        android:maxLines="10"
-        android:scrollHorizontally="false" />
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/etAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Location"
+            android:inputType="text"
+            android:maxLines="1"
+            android:scrollHorizontally="false" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/etBody_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/etBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Write your post..."
+            android:inputType="textMultiLine"
+            android:maxLines="10"
+            android:scrollHorizontally="false" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <Button
         android:id="@+id/btnAttach"
@@ -56,8 +80,5 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="100sp"
         android:text="Send"/>
-
-
-
 
 </LinearLayout>

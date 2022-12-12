@@ -1,4 +1,4 @@
-package com.example.aitforumdemo.data
+package com.example.yourtrip.data
 
 data class Post(
     var uid: String = "",

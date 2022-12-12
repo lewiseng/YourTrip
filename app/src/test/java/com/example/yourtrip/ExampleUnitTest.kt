@@ -1,4 +1,4 @@
-package com.example.aitforumdemo
+package com.example.yourtrip
 
 import org.junit.Test
 
