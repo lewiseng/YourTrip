@@ -17,11 +17,11 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnRegister.setOnClickListener{
+        binding.btnRegister.setOnClickListener {
             registerUser()
         }
 
-        binding.btnLogin.setOnClickListener{
+        binding.btnLogin.setOnClickListener {
             loginUser()
         }
     }
@@ -37,7 +37,7 @@ class LoginActivity : AppCompatActivity() {
                     getString(R.string.registrationToastMsg),
                     Toast.LENGTH_LONG
                 ).show()
-            }.addOnFailureListener{
+            }.addOnFailureListener {
                 Toast.makeText(
                     this,
                     getString(R.string.toastErrorMsg, it.message),
@@ -62,7 +62,7 @@ class LoginActivity : AppCompatActivity() {
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
 
-            }.addOnFailureListener{
+            }.addOnFailureListener {
                 Toast.makeText(
                     this,
                     getString(R.string.toastErrorMsg, it.message),

@@ -36,5 +36,12 @@
     <string name="toastErrorMsg">Error %1$s</string>
     <string name="registrationToastMsg">Registration OK</string>
     <string name="toastLoginSuccessMsg">Login OK</string>
-    <string name="dashboardDisplayText">Your number of posts: %1$s</string>
+    <string name="postNumberCountText">Your number of posts: %1$s</string>
+    <string name="uid">uid</string>
+    <string name="title">title</string>
+    <string name="location">location</string>
+    <string name="body">body</string>
+    <string name="latitude">latitude</string>
+    <string name="longitude">longitude</string>
+    <string name="imgUrl">imgUrl</string>
 </resources>

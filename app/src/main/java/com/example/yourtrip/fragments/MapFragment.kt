@@ -48,14 +48,16 @@ class MapFragment : Fragment() {
     }
 
 
-    private fun queryPosts(){
+    private fun queryPosts() {
         val queryPosts = FirebaseFirestore.getInstance().collection(
             CreatePostActivity.COLLECTION_POSTS
-        ).whereNotEqualTo("location", "")
+        ).whereNotEqualTo(getString(R.string.location), "")
 
         val eventListener = object : EventListener<QuerySnapshot> {
-            override fun onEvent(querySnapshot: QuerySnapshot?,
-                                 e: FirebaseFirestoreException?) {
+            override fun onEvent(
+                querySnapshot: QuerySnapshot?,
+                e: FirebaseFirestoreException?
+            ) {
                 if (e != null) {
                     Toast.makeText(
                         requireActivity(), "Error: ${e.message}",
@@ -69,8 +71,8 @@ class MapFragment : Fragment() {
 
                 mapFragment.getMapAsync { googleMap ->
                     //move map to europe
-                    val budapest = LatLng(47.5070555,19.0450278)
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom( budapest, 5f))
+                    val budapest = LatLng(47.5070555, 19.0450278)
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(budapest, 5f))
 
                     for (docChange in querySnapshot?.documentChanges!!) {
                         when (docChange.type) {
@@ -90,30 +92,35 @@ class MapFragment : Fragment() {
         snapshotListener = queryPosts.addSnapshotListener(eventListener)
     }
 
-    private fun addCustomMarker(markerInfo: Post, googleMap: GoogleMap){
+    private fun addCustomMarker(markerInfo: Post, googleMap: GoogleMap) {
         val loc = LatLng(markerInfo.latitude.toDouble(), markerInfo.longitude.toDouble())
-        if (markerInfo.latitude.isNotBlank() && markerInfo.longitude.isNotBlank()){
-            if (markerInfo.imgUrl.isNotBlank()){
+        if (markerInfo.latitude.isNotBlank() && markerInfo.longitude.isNotBlank()) {
+            if (markerInfo.imgUrl.isNotBlank()) {
                 Glide.with(requireContext()).asBitmap()
                     .load(markerInfo.imgUrl)
-                    .into(object : CustomTarget<Bitmap>(){
-                        override fun onResourceReady(result: Bitmap, transition: Transition<in Bitmap>?) {
+                    .into(object : CustomTarget<Bitmap>() {
+                        override fun onResourceReady(
+                            result: Bitmap,
+                            transition: Transition<in Bitmap>?
+                        ) {
                             val roundedDescriptor = bitmapToRoundBitmapDescriptor(result)
-                            googleMap.addMarker(MarkerOptions().position(loc).title(markerInfo.location))
+                            googleMap.addMarker(
+                                MarkerOptions().position(loc).title(markerInfo.location)
+                            )
                                 ?.setIcon(roundedDescriptor)
                         }
+
                         override fun onLoadCleared(placeholder: Drawable?) {
                         }
                     })
-            }
-            else{
+            } else {
                 googleMap.addMarker(MarkerOptions().position(loc).title(markerInfo.location))
             }
         }
 
     }
 
-    private fun bitmapToRoundBitmapDescriptor(img: Bitmap): BitmapDescriptor{
+    private fun bitmapToRoundBitmapDescriptor(img: Bitmap): BitmapDescriptor {
         val bitmap = Bitmap.createScaledBitmap(img, 150, 150, false)
         val roundedBitmapDrawable: RoundedBitmapDrawable =
             RoundedBitmapDrawableFactory.create(
@@ -129,8 +136,6 @@ class MapFragment : Fragment() {
         _binding = null
         snapshotListener?.remove()
     }
-
-
 
 
 }

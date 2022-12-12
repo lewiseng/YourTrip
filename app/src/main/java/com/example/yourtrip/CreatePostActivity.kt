@@ -41,8 +41,7 @@ class CreatePostActivity : AppCompatActivity() {
         binding = ActivityCreatePostBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (intent.hasExtra(PostsAdapter.DOC_ID))
-        {
+        if (intent.hasExtra(PostsAdapter.DOC_ID)) {
             isEditMode = true
         }
 
@@ -56,7 +55,8 @@ class CreatePostActivity : AppCompatActivity() {
             binding.etBody.setText(intent.getStringExtra(PostsAdapter.BODY))
         }
         if (intent.hasExtra(PostsAdapter.IMG_URL) &&
-                intent.getStringExtra(PostsAdapter.IMG_URL)?.isNotBlank()!!) {
+            intent.getStringExtra(PostsAdapter.IMG_URL)?.isNotBlank()!!
+        ) {
             Glide
                 .with(binding.root)
                 .load(intent.getStringExtra(PostsAdapter.IMG_URL))
@@ -67,7 +67,7 @@ class CreatePostActivity : AppCompatActivity() {
         }
 
         binding.btnSend.setOnClickListener {
-            if(isFormValid()){
+            if (isFormValid()) {
                 getCoordinates()
                 Thread.sleep(1000)
                 if (uploadBitmap != null) {
@@ -77,10 +77,9 @@ class CreatePostActivity : AppCompatActivity() {
                         e.printStackTrace()
                     }
                 } else {
-                    if (isEditMode){
+                    if (isEditMode) {
                         uploadPost(intent.getStringExtra(PostsAdapter.IMG_URL)!!)
-                    }
-                    else{
+                    } else {
                         uploadPost()
                     }
                 }
@@ -94,16 +93,17 @@ class CreatePostActivity : AppCompatActivity() {
 
     private var uploadBitmap: Bitmap? = null
 
-    private var photoLauncher = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
-        // Callback is invoked after the user selects a media item or closes the
-        // photo picker.
-        if (uri != null) {
-            uploadBitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
-            binding.imgAttach.setImageBitmap(uploadBitmap)
-            binding.imgAttach.visibility = View.VISIBLE
-        } else {
+    private var photoLauncher =
+        registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+            // Callback is invoked after the user selects a media item or closes the
+            // photo picker.
+            if (uri != null) {
+                uploadBitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
+                binding.imgAttach.setImageBitmap(uploadBitmap)
+                binding.imgAttach.visibility = View.VISIBLE
+            } else {
+            }
         }
-    }
 
 
     private fun getCoordinates() {
@@ -117,7 +117,7 @@ class CreatePostActivity : AppCompatActivity() {
             addressList = geocoder.getFromLocationName(binding.etAddress.text.toString(), 1)
             if (addressList != null) {
                 doubleLat = addressList[0].latitude
-                doubleLong= addressList[0].longitude
+                doubleLong = addressList[0].longitude
             }
         } catch (e: IOException) {
             Log.d(getString(R.string.catchErrorMsg), e.toString())
@@ -132,12 +132,12 @@ class CreatePostActivity : AppCompatActivity() {
                 FirebaseFirestore.getInstance().collection(COLLECTION_POSTS)
             doc.document(intent.getStringExtra(PostsAdapter.DOC_ID).toString())
                 .update(
-                    "title", binding.etTitle.text.toString(),
-                    "location", binding.etAddress.text.toString(),
-                    "body", binding.etBody.text.toString(),
-                    "latitude", doubleLat.toString(),
-                    "longitude", doubleLong.toString(),
-                    "imgUrl", imgUrl
+                    getString(R.string.title), binding.etTitle.text.toString(),
+                    getString(R.string.location), binding.etAddress.text.toString(),
+                    getString(R.string.body), binding.etBody.text.toString(),
+                    getString(R.string.latitude), doubleLat.toString(),
+                    getString(R.string.longitude), doubleLong.toString(),
+                    getString(R.string.imgUrl), imgUrl
                 )
                 .addOnSuccessListener {
                     Toast.makeText(
@@ -187,7 +187,7 @@ class CreatePostActivity : AppCompatActivity() {
         }
     }
 
-        private fun uploadPostWithImage() {
+    private fun uploadPostWithImage() {
         // Convert bitmap to JPEG and put it in a byte array
         val baos = ByteArrayOutputStream()
         uploadBitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
@@ -201,8 +201,10 @@ class CreatePostActivity : AppCompatActivity() {
         // upload the jpeg byte array to the created empty file
         newImagesRef.putBytes(imageInBytes)
             .addOnFailureListener { exception ->
-                Toast.makeText(this@CreatePostActivity,
-                    exception.message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this@CreatePostActivity,
+                    exception.message, Toast.LENGTH_SHORT
+                ).show()
                 exception.printStackTrace()
             }.addOnSuccessListener {
                 // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.

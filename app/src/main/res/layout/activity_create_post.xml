@@ -4,19 +4,19 @@
     android:id="@+id/activity_write_post"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="vertical">
 
 
     <ImageView
         android:id="@+id/imgAttach"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxHeight="300dp"
-        android:scaleType="center"
         android:layout_marginBottom="10dp"
         android:adjustViewBounds="true"
-        android:visibility="gone"/>
+        android:maxHeight="300dp"
+        android:scaleType="center"
+        android:visibility="gone" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/etTitle_input_layout"
@@ -79,6 +79,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="100sp"
-        android:text="@string/btnSendStr"/>
+        android:text="@string/btnSendStr" />
 
 </LinearLayout>

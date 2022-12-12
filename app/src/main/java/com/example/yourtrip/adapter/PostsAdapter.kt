@@ -20,8 +20,8 @@ class PostsAdapter(var context: Context, uid: String) :
     RecyclerView.Adapter<PostsAdapter.ViewHolder>() {
 
     var currentUid: String = uid
-    private var  postsList = mutableListOf<Post>()
-    var  postKeys = mutableListOf<String>()
+    private var postsList = mutableListOf<Post>()
+    var postKeys = mutableListOf<String>()
     var id: String = ""
 
     companion object {
@@ -45,7 +45,12 @@ class PostsAdapter(var context: Context, uid: String) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val post = postsList[holder.adapterPosition]
-        holder.itemView.startAnimation(AnimationUtils.loadAnimation(holder.itemView.context, R.anim.anim_one))
+        holder.itemView.startAnimation(
+            AnimationUtils.loadAnimation(
+                holder.itemView.context,
+                R.anim.anim_one
+            )
+        )
         holder.bind(post)
     }
 
@@ -65,7 +70,7 @@ class PostsAdapter(var context: Context, uid: String) :
         }
     }
 
-    fun editPostByKey(editedPost: Post, key: String){
+    fun editPostByKey(editedPost: Post, key: String) {
         val index = postKeys.indexOf(key)
         if (index != -1) {
             postsList[index] = editedPost
@@ -73,13 +78,14 @@ class PostsAdapter(var context: Context, uid: String) :
         }
     }
 
-    inner class ViewHolder(private val binding: PostRowBinding) : RecyclerView.ViewHolder(binding.root){
+    inner class ViewHolder(private val binding: PostRowBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(post: Post) {
             binding.tvAuthor.text = post.author
             binding.tvTitle.text = post.title
             binding.tvBody.text = post.body
 
-            if (post.imgUrl.isNotBlank()){
+            if (post.imgUrl.isNotBlank()) {
                 Glide
                     .with(binding.root)
                     .load(post.imgUrl)
@@ -88,13 +94,20 @@ class PostsAdapter(var context: Context, uid: String) :
                     .into(binding.ivPhoto)
             }
 
-            val colorsList = listOf(R.color.myColor1, R.color.myColor2, R.color.myColor3,
-                R.color.myColor4, R.color.myColor5, R.color.myColor6)
+            val colorsList = listOf(
+                R.color.myColor1, R.color.myColor2, R.color.myColor3,
+                R.color.myColor4, R.color.myColor5, R.color.myColor6
+            )
 
-            binding.cardView.setCardBackgroundColor(ContextCompat.getColor(context, colorsList[adapterPosition%6]))
+            binding.cardView.setCardBackgroundColor(
+                ContextCompat.getColor(
+                    context,
+                    colorsList[adapterPosition % 6]
+                )
+            )
 
 
-            if (currentUid == post.uid){
+            if (currentUid == post.uid) {
                 binding.btnDelete.visibility = View.VISIBLE
                 binding.btnEdit.visibility = View.VISIBLE
             } else {
@@ -124,7 +137,7 @@ class PostsAdapter(var context: Context, uid: String) :
                 (context as MainActivity).startActivity(intentMain)
             }
 
-            binding.btnDelete.setOnClickListener{
+            binding.btnDelete.setOnClickListener {
                 FirebaseFirestore.getInstance().collection(
                     CreatePostActivity.COLLECTION_POSTS
                 ).document(

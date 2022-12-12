@@ -11,6 +11,7 @@ import com.example.yourtrip.LoginActivity
 import com.example.yourtrip.MainActivity
 import com.example.yourtrip.databinding.FragmentHomeBinding
 import com.example.yourtrip.CreatePostActivity
+import com.example.yourtrip.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 
@@ -62,18 +63,18 @@ class HomeFragment : Fragment() {
     private fun queryNumOfPosts() {
         val numOfPosts = FirebaseFirestore.getInstance().collection(
             CreatePostActivity.COLLECTION_POSTS
-        ).whereEqualTo("uid", FirebaseAuth.getInstance().currentUser!!.uid)
+        ).whereEqualTo(getString(R.string.uid), FirebaseAuth.getInstance().currentUser!!.uid)
 
         snapshotListener = numOfPosts.addSnapshotListener { value, e ->
             if (e != null) {
 //                Log.w("TAG", "Listen failed.", e)
                 return@addSnapshotListener
             }
-            binding.textDashboard.text = "Your number of posts: ${value!!.count()}"
+            binding.textDashboard.text =
+                getString(R.string.postNumberCountText, value!!.count().toString())
 
         }
     }
-
 
 
     override fun onDestroyView() {

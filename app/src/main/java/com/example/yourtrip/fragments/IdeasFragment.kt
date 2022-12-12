@@ -31,8 +31,10 @@ class IdeasFragment : Fragment() {
         _binding = FragmentIdeasBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        adapter = PostsAdapter(requireActivity(),
-            FirebaseAuth.getInstance().currentUser!!.uid)
+        adapter = PostsAdapter(
+            requireActivity(),
+            FirebaseAuth.getInstance().currentUser!!.uid
+        )
         binding.recyclerPosts.adapter = adapter
 
         queryPosts()
@@ -42,14 +44,16 @@ class IdeasFragment : Fragment() {
 
     private var snapshotListener: ListenerRegistration? = null
 
-    private fun queryPosts(){
+    private fun queryPosts() {
         val queryPosts = FirebaseFirestore.getInstance().collection(
             CreatePostActivity.COLLECTION_POSTS
         )
 
         val eventListener = object : EventListener<QuerySnapshot> {
-            override fun onEvent(querySnapshot: QuerySnapshot?,
-                                 e: FirebaseFirestoreException?) {
+            override fun onEvent(
+                querySnapshot: QuerySnapshot?,
+                e: FirebaseFirestoreException?
+            ) {
                 if (e != null) {
                     Toast.makeText(
                         requireActivity(), "Error: ${e.message}",
