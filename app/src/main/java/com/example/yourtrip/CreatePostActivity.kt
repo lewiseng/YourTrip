@@ -68,10 +68,6 @@ class CreatePostActivity : AppCompatActivity() {
         binding.btnSend.setOnClickListener {
             if(isFormValid()){
                 getCoordinates()
-                Toast.makeText(
-                    this@CreatePostActivity,
-                    "Please wait...", Toast.LENGTH_LONG
-                ).show()
                 Thread.sleep(1000)
                 if (uploadBitmap != null) {
                     try {
@@ -80,7 +76,12 @@ class CreatePostActivity : AppCompatActivity() {
                         e.printStackTrace()
                     }
                 } else {
-                    uploadPost(intent.getStringExtra(PostsAdapter.IMG_URL)!!)
+                    if (isEditMode){
+                        uploadPost(intent.getStringExtra(PostsAdapter.IMG_URL)!!)
+                    }
+                    else{
+                        uploadPost()
+                    }
                 }
             }
         }
@@ -107,6 +108,10 @@ class CreatePostActivity : AppCompatActivity() {
 
 
     private fun getCoordinates() {
+        Toast.makeText(
+            this@CreatePostActivity,
+            "Please wait...", Toast.LENGTH_LONG
+        ).show()
         val geocoder = Geocoder(this)
         val addressList: List<Address>?
         try {
