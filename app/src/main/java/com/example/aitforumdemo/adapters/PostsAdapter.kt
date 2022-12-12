@@ -7,10 +7,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.aitforumdemo.MainActivity
+import com.example.aitforumdemo.R
 import com.example.aitforumdemo.main.CreatePostActivity
 import com.example.aitforumdemo.data.Post
 import com.example.aitforumdemo.databinding.PostRowBinding
@@ -50,6 +52,7 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder>{
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var post = postsList[holder.adapterPosition]
+        holder.itemView.startAnimation(AnimationUtils.loadAnimation(holder.itemView.context, R.anim.anim_one))
 //        var post = postsList[0]
         holder.bind(post)
     }

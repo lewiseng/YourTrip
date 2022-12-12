@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/navigation_ideas"
         android:name="com.example.aitforumdemo.ui.IdeasFragment"
-        android:label="@string/title_ideas"
+        android:label="Posts"
         tools:layout="@layout/fragment_ideas" />
 
     <fragment
