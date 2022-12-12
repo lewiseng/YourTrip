@@ -165,37 +165,34 @@ class CreatePostActivity : AppCompatActivity() {
         }
     }
 
-    private fun uploadPost(imgUrl: String = "") {
-        val newPost = Post(
-            FirebaseAuth.getInstance().currentUser!!.uid,
-            FirebaseAuth.getInstance().currentUser!!.email!!,
-            binding.etTitle.text.toString(),
-            binding.etBody.text.toString(),
-            binding.etAddress.text.toString(),
-            doubleLat.toString(),
-            doubleLong.toString(),
-            imgUrl
-        )
-    private fun uploadPost() {
+
+
+    fun uploadPost(imgUrl: String = "") {
         if (isEditMode) {
             // update firebase values here
-            var doc = FirebaseFirestore.getInstance().collection(CreatePostActivity.COLLECTION_POSTS)
+            var doc =
+                FirebaseFirestore.getInstance().collection(CreatePostActivity.COLLECTION_POSTS)
             doc.document(intent.getStringExtra(PostsAdapter.DOC_ID).toString())
 //            doc.document("RtAiVgBqJDcdD9FznkoQ")
                 .update(
-                "title", binding.etTitle.text.toString(),
+                    "title", binding.etTitle.text.toString(),
                     "location", binding.etAddress.text.toString(),
-                "body", binding.etBody.text.toString(),
-                "latitude", doubleLat.toString(),
-                "longitude", doubleLong.toString())
+                    "body", binding.etBody.text.toString(),
+                    "latitude", doubleLat.toString(),
+                    "longitude", doubleLong.toString()
+                )
                 .addOnSuccessListener {
-                    Toast.makeText(this@CreatePostActivity,
-                        "Post UPDATED", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@CreatePostActivity,
+                        "Post UPDATED", Toast.LENGTH_LONG
+                    ).show()
                     finish()
                 }
                 .addOnFailureListener {
-                    Toast.makeText(this@CreatePostActivity,
-                        "Error ${it.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@CreatePostActivity,
+                        "Error ${it.message}", Toast.LENGTH_LONG
+                    ).show()
                 }
         } else {
             val newPost = Post(
@@ -206,7 +203,7 @@ class CreatePostActivity : AppCompatActivity() {
                 binding.etAddress.text.toString(),
                 doubleLat.toString(),
                 doubleLong.toString(),
-                ""
+                imgUrl
             )
 
             // "connect" to posts collection (table)
@@ -216,19 +213,23 @@ class CreatePostActivity : AppCompatActivity() {
                 )
             postsCollection.add(newPost)
                 .addOnSuccessListener {
-                    Toast.makeText(this@CreatePostActivity,
-                        "Post SAVED", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@CreatePostActivity,
+                        "Post SAVED", Toast.LENGTH_LONG
+                    ).show()
 
                     finish()
                 }
                 .addOnFailureListener {
-                    Toast.makeText(this@CreatePostActivity,
-                        "Error ${it.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@CreatePostActivity,
+                        "Error ${it.message}", Toast.LENGTH_LONG
+                    ).show()
                 }
         }
+    }
 
-
-    private fun uploadPostWithImage() {
+        fun uploadPostWithImage() {
         // Convert bitmap to JPEG and put it in a byte array
         val baos = ByteArrayOutputStream()
         uploadBitmap?.compress(Bitmap.CompressFormat.JPEG, 100, baos)
@@ -256,9 +257,6 @@ class CreatePostActivity : AppCompatActivity() {
                         }
                     })
             }
-    }
-
-}
     }
 
 }

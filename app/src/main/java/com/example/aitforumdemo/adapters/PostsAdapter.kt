@@ -2,6 +2,7 @@ package com.example.aitforumdemo.adapters
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,6 +79,15 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder>{
             postsList.removeAt(index)
             postKeys.removeAt(index)
             notifyItemRemoved(index)
+        }
+    }
+
+    fun editPostByKey(key: String){
+        val index = postKeys.indexOf(key)
+        Log.d("LALA INDEX", index.toString())
+        if (index != -1) {
+            notifyItemRemoved(index)
+            notifyItemInserted(index)
         }
     }
 

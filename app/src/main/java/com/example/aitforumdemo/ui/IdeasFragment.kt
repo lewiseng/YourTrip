@@ -1,6 +1,7 @@
 package com.example.aitforumdemo.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -68,7 +69,8 @@ class IdeasFragment : Fragment() {
                             adapter.removePostByKey(docChange.document.id)
                         }
                         DocumentChange.Type.MODIFIED -> {
-
+                            Log.d("LALA", "CALLED")
+                            adapter.editPostByKey(docChange.document.id)
                         }
                     }
                 }

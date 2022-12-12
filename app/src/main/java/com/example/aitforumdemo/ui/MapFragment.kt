@@ -113,6 +113,8 @@ class MapFragment : Fragment() {
                             }
                         }
                     }
+
+
                 }
             }
         }

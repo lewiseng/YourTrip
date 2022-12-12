@@ -36,5 +36,5 @@ android:fitsSystemWindows="true">
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/sign_out"/>
+        android:text="@string/sign_out" />
 </LinearLayout>

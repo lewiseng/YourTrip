@@ -6,14 +6,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.aitforumdemo.LoginActivity
 import com.example.aitforumdemo.MainActivity
+import com.example.aitforumdemo.data.Post
 import com.example.aitforumdemo.databinding.FragmentHomeBinding
 import com.example.aitforumdemo.main.CreatePostActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.AggregateSource
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.*
 
 class HomeFragment : Fragment() {
 
@@ -29,6 +30,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
@@ -40,7 +42,7 @@ class HomeFragment : Fragment() {
             startActivity(intentMain)
         }
 
-        binding.btnSignOut.setOnClickListener{
+        binding.btnSignOut.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             val intentMain = Intent()
             intentMain.setClass(
@@ -50,25 +52,34 @@ class HomeFragment : Fragment() {
             (context as MainActivity).finish()
         }
 
+        queryNumOfPosts()
+
         return root
     }
+
+    var snapshotListener: ListenerRegistration? = null
+
+    fun queryNumOfPosts() {
+        val numOfPosts = FirebaseFirestore.getInstance().collection(
+            CreatePostActivity.COLLECTION_POSTS
+        ).whereEqualTo("uid", FirebaseAuth.getInstance().currentUser!!.uid)
+
+        snapshotListener = numOfPosts.addSnapshotListener { value, e ->
+            if (e != null) {
+                Log.w("TAG", "Listen failed.", e)
+                return@addSnapshotListener
+            }
+            binding.textDashboard.text = "Your number of posts: ${value!!.count()}"
+
+        }
+    }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        snapshotListener?.remove()
     }
 
-    override fun onResume() {
-        super.onResume()
-        val numOfPosts = FirebaseFirestore.getInstance().collection(
-            CreatePostActivity.COLLECTION_POSTS
-        ).whereEqualTo("uid", FirebaseAuth.getInstance().currentUser!!.uid).count()
-        numOfPosts.get(AggregateSource.SERVER).addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                binding.textDashboard.text = "Your number of posts: ${task.result.count}"
-            } else {
-                Log.d("TAG", "Count failed: ", task.getException())
-            }
-        }
-    }
 }
